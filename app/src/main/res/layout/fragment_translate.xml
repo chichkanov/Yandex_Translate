@@ -5,6 +5,10 @@
     android:orientation="vertical"
     tools:context="com.chichkanov.yandex_translate.TranslateFragment">
 
+    <com.chichkanov.yandex_translate.SwitchLanguageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <com.chichkanov.yandex_translate.TranslateFormView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
