@@ -3,6 +3,8 @@ package com.chichkanov.yandex_translate;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +17,8 @@ import android.view.MenuItem;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private final static int MENU_TRANSLATE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,11 @@ public class NavigationActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(savedInstanceState == null){
+            navigationView.getMenu().getItem(MENU_TRANSLATE).setChecked(true);
+            onNavigationItemSelected(navigationView.getMenu().getItem(MENU_TRANSLATE));
+        }
     }
 
     @Override
@@ -48,17 +57,27 @@ public class NavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_translate) {
-
+            TranslateFragment translateFragment = TranslateFragment.newInstance("Переводчик");
+            addFragment(translateFragment);
         } else if (id == R.id.nav_history) {
-
-        } else if (id == R.id.nav_star) {
-
+            HistoryFragment historyFragment = HistoryFragment.newInstance("История");
+            addFragment(historyFragment);
+        } else if (id == R.id.nav_fav) {
+            FavFragment favFragment = FavFragment.newInstance("Избранное");
+            addFragment(favFragment);
         } else if (id == R.id.nav_settings) {
-
+            SettingsFragment settingsFragment = SettingsFragment.newInstance("Настройки");
+            addFragment(settingsFragment);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void addFragment(Fragment fragment) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft = ft.replace(R.id.content_navigation, fragment);
+        ft.commit();
     }
 }
