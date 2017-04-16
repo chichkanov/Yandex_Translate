@@ -40,10 +40,9 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/btn_translated_fav"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/translate_fav_btn"
-            app:srcCompat="@drawable/ic_copy" />
+            android:layout_marginTop="8dp"
+            android:background="@drawable/ic_copy_text"
+            android:contentDescription="@string/translate_fav_btn" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>
