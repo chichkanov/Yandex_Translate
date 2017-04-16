@@ -71,18 +71,31 @@ public class TranslateFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         getActivity().setTitle(title);
         restoreSwitchLanguageState();
+
+        // Моментальынй перевод текста при его изменении в форме для ввода
         translateForm.setTextChangingListener(new TranslateFormView.TextChangingListener() {
             @Override
             public void initTranslation() {
                 showTranslatedForm();
-                if (savedInstanceState != null)
-                    translatedForm.setText(savedInstanceState.getString(CURRENT_TRANSLATION));
-                else loadTranslate();
+                loadTranslate();
             }
 
             @Override
             public void removeTranslation() {
                 hideTranslatedForm();
+            }
+        });
+
+        // Перевод текста при изменении выбранного языка
+        switchLanguageForm.setSpinnerChangeListener(new SwitchLanguageView.SpinnerChangeListener() {
+            @Override
+            public void initTranslation() {
+                loadTranslate();
+            }
+
+            @Override
+            public void swapTranslateResults() {
+                translateForm.setText(translatedForm.getText());
             }
         });
     }
@@ -99,7 +112,7 @@ public class TranslateFragment extends Fragment {
         saveSwitchLanguageState();
     }
 
-    private void saveSwitchLanguageState(){
+    private void saveSwitchLanguageState() {
         SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(TRANSLATION_SPINNER_FROM, switchLanguageForm.getSpinnerFromPos());
@@ -107,13 +120,18 @@ public class TranslateFragment extends Fragment {
         editor.apply();
     }
 
-    private void restoreSwitchLanguageState(){
+    private void restoreSwitchLanguageState() {
         SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
-        switchLanguageForm.setSpinnerFromPos(prefs.getInt(TRANSLATION_SPINNER_FROM, 0));
-        switchLanguageForm.setSpinnerToPos(prefs.getInt(TRANSLATION_SPINNER_TO, 1));
+        int pos1 = prefs.getInt(TRANSLATION_SPINNER_FROM, 0);
+        int pos2 = prefs.getInt(TRANSLATION_SPINNER_TO, 1);
+        switchLanguageForm.setSpinnerFromPos(pos1);
+        switchLanguageForm.setSpinnerToPos(pos2);
+        switchLanguageForm.setPrevSpinnerFromPos(pos1);
+        switchLanguageForm.setPrevSpinnerToPos(pos2);
     }
 
     private void hideTranslatedForm() {
+        translatedForm.clearText();
         translatedForm.setVisibility(View.GONE);
     }
 
@@ -123,30 +141,32 @@ public class TranslateFragment extends Fragment {
 
 
     private void loadTranslate() {
-        detectLanguage();
-        Map<String, String> keys = new HashMap<>();
-        keys.put("key", ConstResources.KEY);
-        keys.put("text", translateForm.getText());
-        keys.put("lang", "en-ru");
+        if (translateForm.getText().length() > 0) {
+            detectLanguage();
+            String translation = ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerFromText()) + "-"
+                    + ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerToText());
+            Map<String, String> keys = new HashMap<>();
+            keys.put("key", ConstResources.KEY);
+            keys.put("text", translateForm.getText());
+            keys.put("lang", translation);
 
+            Call<YandexTranslateResponse> call = api.translate(keys);
+            call.enqueue(new Callback<YandexTranslateResponse>() {
+                @Override
+                public void onResponse(Call<YandexTranslateResponse> call, Response<YandexTranslateResponse> response) {
+                    if (response.isSuccessful()) {
+                        translatedForm.setText(response.body().getText().get(0));
+                    } else {
+                        Toast.makeText(getContext(), String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-        Call<YandexTranslateResponse> call = api.translate(keys);
-        call.enqueue(new Callback<YandexTranslateResponse>() {
-            @Override
-            public void onResponse(Call<YandexTranslateResponse> call, Response<YandexTranslateResponse> response) {
-                if (response.isSuccessful()) {
-                    translatedForm.setText(response.body().getText().get(0));
-                } else {
-                    Toast.makeText(getContext(), String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                @Override
+                public void onFailure(Call<YandexTranslateResponse> call, Throwable t) {
 
                 }
-            }
-
-            @Override
-            public void onFailure(Call<YandexTranslateResponse> call, Throwable t) {
-
-            }
-        });
+            });
+        }
     }
 
     private void detectLanguage() {
@@ -161,13 +181,10 @@ public class TranslateFragment extends Fragment {
             @Override
             public void onResponse(Call<YandexDetectResponse> call, Response<YandexDetectResponse> response) {
                 if (response.isSuccessful()) {
-                    if(response.body().getCode() == 200){
+                    if (response.body().getCode() == 200 && response.body().getLang().length() > 0) {
+                        switchLanguageForm.setPrevSpinnerFromPos(switchLanguageForm.getSpinnerFromPos());
                         switchLanguageForm.setSpinnerTextFrom(response.body().getLang());
-
                     }
-                }
-                else{
-                    Log.i("Lang Detect", "Error");
                 }
             }
 

@@ -22,7 +22,6 @@ public class TranslateFormView extends RelativeLayout {
 
     public TranslateFormView(Context context) {
         super(context);
-
         initViews();
     }
 
@@ -73,11 +72,14 @@ public class TranslateFormView extends RelativeLayout {
         this.textChangingListener = textChangingListener;
     }
 
+    public void setText(String text) {
+        editText.setText(text);
+    }
+
     // Интерфейс для загрузки перевода
     // Вызывается при изменении текста для моментального перевода
     public interface TextChangingListener {
         void initTranslation();
-
         void removeTranslation();
     }
 }

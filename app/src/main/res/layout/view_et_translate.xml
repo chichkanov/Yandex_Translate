@@ -24,7 +24,7 @@
             android:lines="4"
             android:scrollbars="vertical" />
 
-        <ImageButton
+        <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/btn_translate_clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -3,7 +3,10 @@ package com.chichkanov.yandex_translate;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -14,6 +17,9 @@ public class SwitchLanguageView extends RelativeLayout {
     private Spinner spinnerFrom, spinnerTo;
     private ImageButton switchLanguage;
     private ArrayAdapter<CharSequence> adapter;
+    private SpinnerChangeListener spinnerChangeListener;
+    private int prevSpinnerFromPos;
+    private int prevSpinnerToPos;
 
     public SwitchLanguageView(Context context) {
         super(context);
@@ -35,9 +41,59 @@ public class SwitchLanguageView extends RelativeLayout {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFrom.setAdapter(adapter);
         spinnerTo.setAdapter(adapter);
-        spinnerFrom.setSelection(0);
-        spinnerTo.setSelection(1);
+
+        switchLanguage.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                savePrevSpinnerPos();
+                spinnerChangeListener.swapTranslateResults();
+                int index = spinnerFrom.getSelectedItemPosition();
+                spinnerFrom.setSelection(spinnerTo.getSelectedItemPosition());
+                spinnerTo.setSelection(index);
+            }
+        });
+
+        spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                if(spinnerFrom.getSelectedItemPosition() == spinnerTo.getSelectedItemPosition()){
+                    spinnerFrom.setSelection(spinnerTo.getSelectedItemPosition());
+                    spinnerTo.setSelection(prevSpinnerFromPos);
+                    savePrevSpinnerPos();
+                }
+                spinnerChangeListener.initTranslation();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(spinnerTo.getSelectedItemPosition() == spinnerFrom.getSelectedItemPosition()){
+                    spinnerTo.setSelection(spinnerFrom.getSelectedItemPosition());
+                    spinnerFrom.setSelection(prevSpinnerToPos);
+                    savePrevSpinnerPos();
+                }
+                spinnerChangeListener.initTranslation();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
+
+    private void savePrevSpinnerPos() {
+        prevSpinnerFromPos = spinnerFrom.getSelectedItemPosition();
+        prevSpinnerToPos = spinnerTo.getSelectedItemPosition();
+    }
+
 
     public void setSpinnerFromPos(int pos) {
         spinnerFrom.setSelection(pos);
@@ -55,18 +111,33 @@ public class SwitchLanguageView extends RelativeLayout {
         return spinnerTo.getSelectedItemPosition();
     }
 
+    public String getSpinnerFromText() {
+        return spinnerFrom.getSelectedItem().toString();
+    }
+
+    public String getSpinnerToText() {
+        return spinnerTo.getSelectedItem().toString();
+    }
+
     public void setSpinnerTextFrom(String text) {
+        String shortLangName = ConstResources.getKeyByValue(text);
+        spinnerFrom.setSelection(adapter.getPosition(shortLangName));
+    }
 
-        switch (text) {
-            case "en": {
-                spinnerFrom.setSelection(adapter.getPosition("английский"));
-                break;
-            }
-            case "ru": {
-                spinnerFrom.setSelection(adapter.getPosition("русский"));
-                break;
-            }
-        }
+    public void setSpinnerChangeListener(SpinnerChangeListener spinnerChangeListener) {
+        this.spinnerChangeListener = spinnerChangeListener;
+    }
 
+    public void setPrevSpinnerFromPos(int prevSpinnerFromPos) {
+        this.prevSpinnerFromPos = prevSpinnerFromPos;
+    }
+
+    public void setPrevSpinnerToPos(int prevSpinnerToPos) {
+        this.prevSpinnerToPos = prevSpinnerToPos;
+    }
+
+    public interface SpinnerChangeListener{
+        void initTranslation();
+        void swapTranslateResults();
     }
 }

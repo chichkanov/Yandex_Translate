@@ -8,10 +8,6 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-/**
- * Created by chichkanov on 15.04.17.
- */
-
 public class TranslatedFormView extends RelativeLayout {
 
     private TextView textView;
@@ -42,6 +38,10 @@ public class TranslatedFormView extends RelativeLayout {
 
     public void setText(String text) {
         textView.setText(text);
+    }
+
+    public void clearText(){
+        textView.setText("");
     }
 
     public String getText() {
