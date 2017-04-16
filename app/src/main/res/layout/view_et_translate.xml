@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="132dp"
         android:layout_margin="@dimen/translate_form_margin"
+        android:animateLayoutChanges="true"
         android:padding="4dp">
 
         <EditText
