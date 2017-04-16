@@ -10,13 +10,16 @@
         android:layout_height="wrap_content" />
 
     <com.chichkanov.yandex_translate.TranslateFormView
+        android:id="@+id/view_translate_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     </com.chichkanov.yandex_translate.TranslateFormView>
 
     <com.chichkanov.yandex_translate.TranslatedFormView
+        android:id="@+id/view_translated_form"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
 </LinearLayout>

@@ -18,9 +18,11 @@ public class TranslateFormView extends RelativeLayout {
 
     private EditText editText;
     private ImageButton imageButton;
+    private TextChangingListener textChangingListener;
 
     public TranslateFormView(Context context) {
         super(context);
+
         initViews();
     }
 
@@ -52,13 +54,30 @@ public class TranslateFormView extends RelativeLayout {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().trim().length() > 0){
+                if (s.toString().trim().length() > 0) {
                     imageButton.setVisibility(VISIBLE);
-                }
-                else{
+                    if (textChangingListener != null) textChangingListener.initTranslation();
+                } else {
                     imageButton.setVisibility(INVISIBLE);
+                    if (textChangingListener != null) textChangingListener.removeTranslation();
                 }
             }
         });
+    }
+
+    public String getText() {
+        return editText.getText().toString();
+    }
+
+    public void setTextChangingListener(TextChangingListener textChangingListener) {
+        this.textChangingListener = textChangingListener;
+    }
+
+    // Интерфейс для загрузки перевода
+    // Вызывается при изменении текста для моментального перевода
+    public interface TextChangingListener {
+        void initTranslation();
+
+        void removeTranslation();
     }
 }

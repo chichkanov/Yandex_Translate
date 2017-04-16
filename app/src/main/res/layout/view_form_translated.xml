@@ -22,7 +22,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/btn_translated_fav"
-            android:text="Тут будет текст, переведенный яндекс переводчиком"
             android:textSize="18sp" />
 
         <ImageButton
