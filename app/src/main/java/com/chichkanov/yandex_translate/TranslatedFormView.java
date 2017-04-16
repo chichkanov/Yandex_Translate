@@ -43,4 +43,8 @@ public class TranslatedFormView extends RelativeLayout {
     public void setText(String text) {
         textView.setText(text);
     }
+
+    public String getText() {
+        return textView.getText().toString();
+    }
 }

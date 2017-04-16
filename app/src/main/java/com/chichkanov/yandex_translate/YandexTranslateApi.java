@@ -15,4 +15,8 @@ public interface YandexTranslateApi {
     @FormUrlEncoded
     @POST("/api/v1.5/tr.json/translate")
     Call<YandexTranslateResponse> translate(@FieldMap Map<String, String> keys);
+
+    @FormUrlEncoded
+    @POST("/api/v1.5/tr.json/detect")
+    Call<YandexDetectResponse> detectLang(@FieldMap Map<String, String> keys);
 }
