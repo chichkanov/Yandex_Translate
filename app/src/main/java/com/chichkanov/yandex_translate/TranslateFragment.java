@@ -132,7 +132,7 @@ public class TranslateFragment extends Fragment {
 
     private void hideTranslatedForm() {
         translatedForm.clearText();
-        translatedForm.setVisibility(View.GONE);
+        translatedForm.setVisibility(View.INVISIBLE);
     }
 
     private void showTranslatedForm() {

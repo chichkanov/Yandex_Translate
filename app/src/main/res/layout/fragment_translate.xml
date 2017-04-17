@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:orientation="vertical"
     tools:context="com.chichkanov.yandex_translate.TranslateFragment">
@@ -14,7 +14,8 @@
     <com.chichkanov.yandex_translate.TranslateFormView
         android:id="@+id/view_translate_form"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/translate_form_margin">
 
     </com.chichkanov.yandex_translate.TranslateFormView>
 
@@ -22,6 +23,9 @@
         android:id="@+id/view_translated_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/translated_form_margin"
+        android:layout_marginLeft="@dimen/translated_form_margin"
+        android:layout_marginRight="@dimen/translated_form_margin"
         android:visibility="gone" />
 
 </LinearLayout>

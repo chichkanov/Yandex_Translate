@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    tools:context="com.chichkanov.yandex_translate.TranslateFragment">
+
+    <com.chichkanov.yandex_translate.SwitchLanguageView
+        android:id="@+id/view_switch_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/ll_translation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/view_switch_form"
+        android:orientation="horizontal">
+
+        <com.chichkanov.yandex_translate.TranslateFormView
+            android:id="@+id/view_translate_form"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        </com.chichkanov.yandex_translate.TranslateFormView>
+
+        <com.chichkanov.yandex_translate.TranslatedFormView
+            android:id="@+id/view_translated_form"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+</RelativeLayout>
