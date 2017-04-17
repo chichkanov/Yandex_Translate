@@ -15,10 +15,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.Writer;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +41,7 @@ public class TranslateFragment extends Fragment {
     private static final String TRANSLATION_SPINNER_FROM = "Translation_spinner_from";
     private static final String TRANSLATION_SPINNER_TO = "Translation_spinner_to";
 
-    public final static String PREFS_SPINNERS_STATE = "spinners_state";
+
 
     private boolean autoTranslate;
     private boolean autoDetectLand;
@@ -90,13 +97,13 @@ public class TranslateFragment extends Fragment {
             @Override
             public void initInstantTranslation() {
                 // Загружаем если включена функция моментального перевода
-                if(autoTranslate)loadTranslate();
+                if (autoTranslate) loadTranslate();
             }
 
             @Override
             public void initNormalTranslation() {
                 // Загружаем перевод только если выключена функция моментального перевода
-                if(!autoTranslate)loadTranslate();
+                if (!autoTranslate) loadTranslate();
             }
 
             @Override
@@ -132,7 +139,7 @@ public class TranslateFragment extends Fragment {
     }
 
     private void saveSwitchLanguageState() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(TRANSLATION_SPINNER_FROM, switchLanguageForm.getSpinnerFromPos());
         editor.putInt(TRANSLATION_SPINNER_TO, switchLanguageForm.getSpinnerToPos());
@@ -140,7 +147,7 @@ public class TranslateFragment extends Fragment {
     }
 
     private void restoreSwitchLanguageState() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
         int pos1 = prefs.getInt(TRANSLATION_SPINNER_FROM, 0);
         int pos2 = prefs.getInt(TRANSLATION_SPINNER_TO, 1);
         switchLanguageForm.setSpinnerFromPos(pos1);
@@ -161,7 +168,7 @@ public class TranslateFragment extends Fragment {
 
     private void loadTranslate() {
         if (translateForm.getText().length() > 0) {
-            if(autoDetectLand) detectLanguage();
+            if (autoDetectLand) detectLanguage();
             String translation = ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerFromText()) + "-"
                     + ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerToText());
             Map<String, String> keys = new HashMap<>();
@@ -176,6 +183,7 @@ public class TranslateFragment extends Fragment {
                     if (response.isSuccessful()) {
                         showTranslatedForm();
                         translatedForm.setText(response.body().getText().get(0));
+                        saveResponse(response.body(), translateForm.getText());
                     } else {
                         Toast.makeText(getContext(), String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                     }
@@ -214,21 +222,29 @@ public class TranslateFragment extends Fragment {
         });
     }
 
-    private void saveResponse(YandexTranslateResponse object){
-        int name = object.hashCode();
-        FileOutputStream fos = null;
-        try {
-            fos = getContext().openFileOutput(String.valueOf(name), Context.MODE_PRIVATE);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            ObjectOutputStream os = new ObjectOutputStream(fos);
-            os.writeObject(this);
-            os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    // Сохранение перевода в историю
+    private void saveResponse(YandexTranslateResponse object, String fromText){
+        // Имя файла представляется в виде ТекстдляпреводаПереводЯзык
+        String name = fromText.trim() + object.getText().get(0).trim() + object.getLang();
+        Gson gson=new GsonBuilder().setPrettyPrinting().create();
+        HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0), fromText, new Date().getTime());
+        String json = gson.toJson(historyItem);
+        SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(name, json);
+        editor.apply();
+    }
 
+    // Сохранение перевода в избранное
+    private void saveResponseToFav(YandexTranslateResponse object, String fromText){
+        // Имя файла представляется в виде ТекстдляпреводаПереводЯзык
+        String name = fromText.trim() + object.getText().get(0).trim() + object.getLang();
+        Gson gson=new GsonBuilder().setPrettyPrinting().create();
+        HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0), fromText, new Date().getTime());
+        String json = gson.toJson(historyItem);
+        SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_FAV_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(name, json);
+        editor.apply();
     }
 }

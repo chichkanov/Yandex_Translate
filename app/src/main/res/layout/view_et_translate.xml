@@ -31,6 +31,6 @@
             android:layout_marginTop="5dp"
             android:background="@android:color/transparent"
             android:visibility="invisible"
-            app:srcCompat="@drawable/ic_clear" />
+            app:srcCompat="@drawable/ic_clear_text" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>
