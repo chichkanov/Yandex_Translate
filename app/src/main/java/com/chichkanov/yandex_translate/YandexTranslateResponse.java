@@ -1,7 +1,7 @@
 package com.chichkanov.yandex_translate;
 
-/**
- * Модель ответа с сервера яндекс переводчика для получения перевода
+/*
+  Модель ответа с сервера яндекс переводчика для получения перевода
  */
 
 import java.util.List;
@@ -44,7 +44,6 @@ public class YandexTranslateResponse {
     public void setText(List<String> text) {
         this.text = text;
     }
-
 }
 
 

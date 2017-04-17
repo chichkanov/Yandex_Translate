@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.SharedPreferencesCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -14,7 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +33,11 @@ public class TranslateFragment extends Fragment {
     private static final String CURRENT_TRANSLATION = "Translation";
     private static final String TRANSLATION_SPINNER_FROM = "Translation_spinner_from";
     private static final String TRANSLATION_SPINNER_TO = "Translation_spinner_to";
+
+    public final static String PREFS_SPINNERS_STATE = "spinners_state";
+
+    private boolean autoTranslate;
+    private boolean autoDetectLand;
 
     private TranslateFormView translateForm;
     private TranslatedFormView translatedForm;
@@ -55,7 +64,6 @@ public class TranslateFragment extends Fragment {
         if (getArguments() != null) {
             title = getArguments().getString(ARG_TITLE);
         }
-
     }
 
     @Override
@@ -73,11 +81,22 @@ public class TranslateFragment extends Fragment {
         getActivity().setTitle(title);
         restoreSwitchLanguageState();
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        autoDetectLand = prefs.getBoolean("trans_auto_detect_lang", true);
+        autoTranslate = prefs.getBoolean("trans_auto_translate", true);
+
         // Моментальынй перевод текста при его изменении в форме для ввода
         translateForm.setTextChangingListener(new TranslateFormView.TextChangingListener() {
             @Override
-            public void initTranslation() {
-                loadTranslate();
+            public void initInstantTranslation() {
+                // Загружаем если включена функция моментального перевода
+                if(autoTranslate)loadTranslate();
+            }
+
+            @Override
+            public void initNormalTranslation() {
+                // Загружаем перевод только если выключена функция моментального перевода
+                if(!autoTranslate)loadTranslate();
             }
 
             @Override
@@ -113,7 +132,7 @@ public class TranslateFragment extends Fragment {
     }
 
     private void saveSwitchLanguageState() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt(TRANSLATION_SPINNER_FROM, switchLanguageForm.getSpinnerFromPos());
         editor.putInt(TRANSLATION_SPINNER_TO, switchLanguageForm.getSpinnerToPos());
@@ -121,7 +140,7 @@ public class TranslateFragment extends Fragment {
     }
 
     private void restoreSwitchLanguageState() {
-        SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getActivity().getSharedPreferences(PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
         int pos1 = prefs.getInt(TRANSLATION_SPINNER_FROM, 0);
         int pos2 = prefs.getInt(TRANSLATION_SPINNER_TO, 1);
         switchLanguageForm.setSpinnerFromPos(pos1);
@@ -142,7 +161,7 @@ public class TranslateFragment extends Fragment {
 
     private void loadTranslate() {
         if (translateForm.getText().length() > 0) {
-            detectLanguage();
+            if(autoDetectLand) detectLanguage();
             String translation = ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerFromText()) + "-"
                     + ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerToText());
             Map<String, String> keys = new HashMap<>();
@@ -193,5 +212,23 @@ public class TranslateFragment extends Fragment {
 
             }
         });
+    }
+
+    private void saveResponse(YandexTranslateResponse object){
+        int name = object.hashCode();
+        FileOutputStream fos = null;
+        try {
+            fos = getContext().openFileOutput(String.valueOf(name), Context.MODE_PRIVATE);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(this);
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
