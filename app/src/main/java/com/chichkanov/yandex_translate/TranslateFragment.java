@@ -42,7 +42,6 @@ public class TranslateFragment extends Fragment {
     private static final String TRANSLATION_SPINNER_TO = "Translation_spinner_to";
 
 
-
     private boolean autoTranslate;
     private boolean autoDetectLand;
 
@@ -121,7 +120,8 @@ public class TranslateFragment extends Fragment {
 
             @Override
             public void swapTranslateResults() {
-                translateForm.setText(translatedForm.getText());
+                if (translatedForm.getText().length() > 0)
+                    translateForm.setText(translatedForm.getText());
             }
         });
     }
@@ -223,10 +223,10 @@ public class TranslateFragment extends Fragment {
     }
 
     // Сохранение перевода в историю
-    private void saveResponse(YandexTranslateResponse object, String fromText){
+    private void saveResponse(YandexTranslateResponse object, String fromText) {
         // Имя файла представляется в виде ТекстдляпреводаПереводЯзык
         String name = fromText.trim() + object.getText().get(0).trim() + object.getLang();
-        Gson gson=new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0), fromText, new Date().getTime());
         String json = gson.toJson(historyItem);
         SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
@@ -236,10 +236,10 @@ public class TranslateFragment extends Fragment {
     }
 
     // Сохранение перевода в избранное
-    private void saveResponseToFav(YandexTranslateResponse object, String fromText){
+    private void saveResponseToFav(YandexTranslateResponse object, String fromText) {
         // Имя файла представляется в виде ТекстдляпреводаПереводЯзык
         String name = fromText.trim() + object.getText().get(0).trim() + object.getLang();
-        Gson gson=new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0), fromText, new Date().getTime());
         String json = gson.toJson(historyItem);
         SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_FAV_NAME, Context.MODE_PRIVATE);
