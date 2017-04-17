@@ -3,6 +3,8 @@ package com.chichkanov.yandex_translate;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +52,15 @@ public class TranslatedFormView extends RelativeLayout {
                 Toast.makeText(getContext(), "Перевод скопирован", Toast.LENGTH_SHORT).show();
             }
         });
+
+        TextView tvCopyright = (TextView) findViewById(R.id.tv_yandex_copyright);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            tvCopyright.setText( Html.fromHtml("<a href=\"https://translate.yandex.ru\">Переведено сервисом «Яндекс.Переводчик</a>", Html.FROM_HTML_MODE_LEGACY));
+        } else {
+            tvCopyright.setText( Html.fromHtml("<a href=\"https://translate.yandex.ru\">Переведено сервисом «Яндекс.Переводчик</a>"));
+        }
+        tvCopyright. setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     public void setText(String text) {

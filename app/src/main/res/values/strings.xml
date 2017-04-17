@@ -11,11 +11,14 @@
     <string name="menu_settings">Настройки</string>
     <string name="menu_about">О приложении</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="translate_hint">Введите текст</string>
     <string name="translate_fav_btn">Mark as favourite word</string>
     <string name="toolbar_clear">Очистить</string>
+    <string name="yandex_copyright_title1">Переведено сервисом «Яндекс.Переводчик»</string>
+    <string name="yandex_copyright_title">User Guide <a href="https://www.google.ru">google.ru</a></string>
+    <string name="dev_name">Aleksandr Chichkanov</string>
+    <string name="yandex_task">Тестовое задание в школу мобильной разработки от Яндекса «Мобилизация»</string>
 
     <string-array name="languages_array">
         <item>английский</item>

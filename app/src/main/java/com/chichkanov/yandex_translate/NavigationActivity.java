@@ -68,6 +68,9 @@ public class NavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_settings) {
             SettingsFragment settingsFragment = SettingsFragment.newInstance("Настройки");
             addFragment(settingsFragment);
+        } else if (id == R.id.nav_about) {
+            AboutAppFragment aboutAppFragment = AboutAppFragment.newInstance("О приложении");
+            addFragment(aboutAppFragment);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

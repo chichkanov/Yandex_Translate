@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:orientation="vertical"
     android:background="@color/grey"
+    android:orientation="vertical"
     tools:context="com.chichkanov.yandex_translate.TranslateFragment">
 
     <com.chichkanov.yandex_translate.SwitchLanguageView
@@ -28,5 +28,4 @@
         android:layout_marginLeft="@dimen/translated_form_margin"
         android:layout_marginRight="@dimen/translated_form_margin"
         android:visibility="gone" />
-
 </LinearLayout>

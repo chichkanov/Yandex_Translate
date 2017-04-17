@@ -23,6 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/btn_translated_fav"
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
@@ -47,6 +48,16 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/translate_fav_btn"
                 android:src="@drawable/ic_copy_text" />
+
+            <TextView
+                android:id="@+id/tv_yandex_copyright"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/tv_translated"
+                android:layout_gravity="center_horizontal"
+                android:textColorLink="#7b7b7b"
+                android:textColor="#7b7b7b"/>
         </RelativeLayout>
     </ScrollView>
 </android.support.v7.widget.CardView>

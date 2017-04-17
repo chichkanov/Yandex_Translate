@@ -146,6 +146,8 @@ public class TranslateFragment extends Fragment {
         editor.apply();
     }
 
+
+
     private void restoreSwitchLanguageState() {
         SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
         int pos1 = prefs.getInt(TRANSLATION_SPINNER_FROM, 0);
