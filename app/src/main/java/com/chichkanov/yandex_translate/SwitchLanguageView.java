@@ -38,7 +38,7 @@ public class SwitchLanguageView extends RelativeLayout {
         switchLanguage = (ImageButton) findViewById(R.id.ib_translate_switch);
         adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.languages_array, R.layout.spinner_item_main);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         spinnerFrom.setAdapter(adapter);
         spinnerTo.setAdapter(adapter);
 

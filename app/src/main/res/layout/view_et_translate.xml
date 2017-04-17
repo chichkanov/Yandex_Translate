@@ -21,8 +21,7 @@
             android:gravity="top|left"
             android:hint="@string/translate_hint"
             android:imeOptions="flagNoExtractUi"
-            android:lines="4"
-            android:scrollbars="vertical" />
+            android:inputType="text"/>
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/btn_translate_clear"

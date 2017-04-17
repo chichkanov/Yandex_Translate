@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.SharedPreferencesCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +77,6 @@ public class TranslateFragment extends Fragment {
         translateForm.setTextChangingListener(new TranslateFormView.TextChangingListener() {
             @Override
             public void initTranslation() {
-                showTranslatedForm();
                 loadTranslate();
             }
 
@@ -155,6 +155,7 @@ public class TranslateFragment extends Fragment {
                 @Override
                 public void onResponse(Call<YandexTranslateResponse> call, Response<YandexTranslateResponse> response) {
                     if (response.isSuccessful()) {
+                        showTranslatedForm();
                         translatedForm.setText(response.body().getText().get(0));
                     } else {
                         Toast.makeText(getContext(), String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
@@ -163,7 +164,6 @@ public class TranslateFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<YandexTranslateResponse> call, Throwable t) {
-
                 }
             });
         }

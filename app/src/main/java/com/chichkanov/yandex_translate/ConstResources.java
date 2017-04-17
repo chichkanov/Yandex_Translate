@@ -15,11 +15,12 @@ public class ConstResources {
 
     private static HashMap<String, String> createMap()
     {
-        HashMap<String,String> lang = new HashMap<String,String>();
+        HashMap<String,String> lang = new HashMap<>();
+        lang.put("английский", "en");
+        lang.put("русский", "ru");
         lang.put("азербайджанский", "az");
         lang.put("албанский", "sq");
         lang.put("амхарский", "am");
-        lang.put("английский", "en");
         lang.put("арабский", "ar");
         lang.put("армянский", "hy");
         lang.put("африкаанс", "af");
@@ -75,7 +76,6 @@ public class ConstResources {
         lang.put("польский", "pl");
         lang.put("португальский", "pt");
         lang.put("румынский", "ro");
-        lang.put("русский", "ru");
         lang.put("себуанский", "seb");
         lang.put("сербский", "sr");
         lang.put("сингальский", "si");

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -14,7 +16,7 @@ import android.widget.RelativeLayout;
  * Created by chichkanov on 15.04.17.
  */
 
-public class TranslateFormView extends RelativeLayout {
+public class TranslateFormView extends RelativeLayout{
 
     private EditText editText;
     private ImageButton imageButton;
@@ -40,6 +42,9 @@ public class TranslateFormView extends RelativeLayout {
                 editText.getText().clear();
             }
         });
+
+        editText.setHorizontallyScrolling(false);
+        editText.setLines(4);
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -55,7 +60,9 @@ public class TranslateFormView extends RelativeLayout {
             public void afterTextChanged(Editable s) {
                 if (s.toString().trim().length() > 0) {
                     imageButton.setVisibility(VISIBLE);
-                    if (textChangingListener != null) textChangingListener.initTranslation();
+                    if (textChangingListener != null) {
+                        textChangingListener.initTranslation();
+                    }
                 } else {
                     imageButton.setVisibility(INVISIBLE);
                     if (textChangingListener != null) textChangingListener.removeTranslation();
