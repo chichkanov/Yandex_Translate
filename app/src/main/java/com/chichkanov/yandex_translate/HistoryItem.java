@@ -1,16 +1,8 @@
 package com.chichkanov.yandex_translate;
 
 import android.support.annotation.NonNull;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.Date;
-import java.util.List;
-
-/**
- * Created by chichkanov on 17.04.17.
- */
 
 public class HistoryItem implements Comparable<HistoryItem> {
 
@@ -30,11 +22,16 @@ public class HistoryItem implements Comparable<HistoryItem> {
     @Expose
     private long date;
 
-    public HistoryItem(String lang, String to, String from, long date){
+    @SerializedName("fav")
+    @Expose
+    private boolean isMarkedFav;
+
+    public HistoryItem(String lang, String to, String from, long date, boolean markedFav){
         this.lang = lang;
         this.to = to;
         this.from = from;
         this.date = date;
+        this.isMarkedFav = markedFav;
     }
 
     public String getLang() {
@@ -68,5 +65,9 @@ public class HistoryItem implements Comparable<HistoryItem> {
         else {
             return 0;
         }
+    }
+
+    public boolean isMarkedFav() {
+        return isMarkedFav;
     }
 }

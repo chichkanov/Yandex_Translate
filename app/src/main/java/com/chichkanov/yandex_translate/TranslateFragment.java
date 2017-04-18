@@ -229,22 +229,9 @@ public class TranslateFragment extends Fragment {
         // Имя файла представляется в виде ТекстдляпреводаПереводЯзык
         String name = fromText.trim() + object.getText().get(0).trim() + object.getLang();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0), fromText, new Date().getTime());
+        HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0), fromText, new Date().getTime(), true);
         String json = gson.toJson(historyItem);
         SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(name, json);
-        editor.apply();
-    }
-
-    // Сохранение перевода в избранное
-    private void saveResponseToFav(YandexTranslateResponse object, String fromText) {
-        // Имя файла представляется в виде ТекстдляпреводаПереводЯзык
-        String name = fromText.trim() + object.getText().get(0).trim() + object.getLang();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0), fromText, new Date().getTime());
-        String json = gson.toJson(historyItem);
-        SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_FAV_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(name, json);
         editor.apply();

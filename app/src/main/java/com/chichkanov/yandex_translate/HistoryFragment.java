@@ -95,7 +95,7 @@ public class HistoryFragment extends Fragment implements Toolbar.OnMenuItemClick
         for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
             String json = entry.getValue().toString();
             HistoryItem historyItem = gson.fromJson(json, HistoryItem.class);
-            list.add(new HistoryItem(historyItem.getLang(), historyItem.getTextTo(), historyItem.getTextFrom(), historyItem.getDate()));
+            list.add(new HistoryItem(historyItem.getLang(), historyItem.getTextTo(), historyItem.getTextFrom(), historyItem.getDate(), historyItem.isMarkedFav()));
         }
         Collections.sort(list);
         return list;

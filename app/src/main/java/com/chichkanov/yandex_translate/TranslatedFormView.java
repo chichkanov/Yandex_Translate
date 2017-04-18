@@ -56,9 +56,9 @@ public class TranslatedFormView extends RelativeLayout {
         TextView tvCopyright = (TextView) findViewById(R.id.tv_yandex_copyright);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            tvCopyright.setText( Html.fromHtml("<a href=\"https://translate.yandex.ru\">Переведено сервисом «Яндекс.Переводчик</a>", Html.FROM_HTML_MODE_LEGACY));
+            tvCopyright.setText( Html.fromHtml("<a href=\"https://translate.yandex.ru\">Переведено сервисом «Яндекс.Переводчик»</a>", Html.FROM_HTML_MODE_LEGACY));
         } else {
-            tvCopyright.setText( Html.fromHtml("<a href=\"https://translate.yandex.ru\">Переведено сервисом «Яндекс.Переводчик</a>"));
+            tvCopyright.setText( Html.fromHtml("<a href=\"https://translate.yandex.ru\">Переведено сервисом «Яндекс.Переводчик»</a>"));
         }
         tvCopyright. setMovementMethod(LinkMovementMethod.getInstance());
     }

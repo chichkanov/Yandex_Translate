@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         holder.from.setText(dataset.get(position).getTextFrom());
         holder.to.setText(dataset.get(position).getTextTo());
         holder.lang.setText(dataset.get(position).getLang());
+        holder.fav.setSelected(dataset.get(position).isMarkedFav());
     }
 
     @Override
@@ -39,12 +41,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public TextView from;
         public TextView to;
         public TextView lang;
+        public ImageButton fav;
 
         public ViewHolder(View view) {
             super(view);
             from = (TextView) view.findViewById(R.id.tv_history_from);
             to = (TextView) view.findViewById(R.id.tv_history_to);
             lang = (TextView) view.findViewById(R.id.tv_history_lang);
+            fav = (ImageButton) view.findViewById(R.id.ib_history_fav);
         }
     }
 }
