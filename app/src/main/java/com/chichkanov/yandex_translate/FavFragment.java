@@ -61,11 +61,19 @@ public class FavFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         dataset = loadCachedResponse();
-        adapter = new FavAdapter(dataset);
+        adapter = new FavAdapter(dataset, new OnFavClickListener() {
+            @Override
+            public void onFavClick(int position) {
+
+            }
+        });
         recyclerView.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
+    }
+
+    private void removeItemFromVar() {
     }
 
     private List<HistoryItem> loadCachedResponse() {

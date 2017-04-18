@@ -25,8 +25,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -147,7 +149,6 @@ public class TranslateFragment extends Fragment {
     }
 
 
-
     private void restoreSwitchLanguageState() {
         SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
         int pos1 = prefs.getInt(TRANSLATION_SPINNER_FROM, 0);
@@ -229,11 +230,23 @@ public class TranslateFragment extends Fragment {
         // Имя файла представляется в виде ТекстдляпреводаПереводЯзык
         String name = fromText.trim() + object.getText().get(0).trim() + object.getLang();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0), fromText, new Date().getTime(), true);
+        HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0), fromText, new Date().getTime(), isResponseAlreadyLiked(name));
         String json = gson.toJson(historyItem);
+        Log.i(object.getText().get(0), String.valueOf(isResponseAlreadyLiked(name)));
         SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(name, json);
         editor.apply();
+    }
+
+    private boolean isResponseAlreadyLiked(String name) {
+        Map<String, String> allEntries = (Map<String, String>) getContext().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE).getAll();
+        if (allEntries.containsKey(name)) {
+            Gson gson = new Gson();
+            String json = allEntries.get(name).toString();
+            HistoryItem historyItem = gson.fromJson(json, HistoryItem.class);
+            return historyItem.isMarkedFav();
+        }
+        return false;
     }
 }

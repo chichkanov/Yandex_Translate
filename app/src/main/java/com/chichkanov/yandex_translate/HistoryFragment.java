@@ -9,6 +9,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -82,10 +83,19 @@ public class HistoryFragment extends Fragment implements Toolbar.OnMenuItemClick
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         dataset = loadCachedResponse();
-        adapter = new HistoryAdapter(dataset);
+        adapter = new HistoryAdapter(dataset, new OnFavClickListener() {
+            @Override
+            public void onFavClick(int position) {
+                addItemToFav();
+            }
+        });
         recyclerView.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
+    }
+
+    private void addItemToFav() {
+        Log.i("CLICK", "IN HISTORY");
     }
 
     private List<HistoryItem> loadCachedResponse() {

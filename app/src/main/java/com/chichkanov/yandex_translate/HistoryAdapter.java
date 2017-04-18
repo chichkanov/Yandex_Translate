@@ -12,15 +12,17 @@ import java.util.List;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHolder> {
 
     private List<HistoryItem> dataset;
+    OnFavClickListener onFavClickListener;
 
-    public HistoryAdapter(List<HistoryItem> dataset) {
+    public HistoryAdapter(List<HistoryItem> dataset, OnFavClickListener onFavClickListener) {
         this.dataset = dataset;
+        this.onFavClickListener = onFavClickListener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, onFavClickListener);
     }
 
     @Override
@@ -43,12 +45,26 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
         public TextView lang;
         public ImageButton fav;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view, OnFavClickListener listener) {
             super(view);
             from = (TextView) view.findViewById(R.id.tv_history_from);
             to = (TextView) view.findViewById(R.id.tv_history_to);
             lang = (TextView) view.findViewById(R.id.tv_history_lang);
             fav = (ImageButton) view.findViewById(R.id.ib_history_fav);
+
+            setFavListener(listener);
         }
+
+        private void setFavListener(final OnFavClickListener listener) {
+            fav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        listener.onFavClick(getAdapterPosition());
+                    }
+                }
+            });
+        }
+
     }
 }
