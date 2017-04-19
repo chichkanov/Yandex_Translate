@@ -137,7 +137,7 @@ public class FavFragment extends Fragment implements Toolbar.OnMenuItemClickList
                 SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 Gson gson = new Gson();
-                for(HistoryItem fav : dataset){
+                for (HistoryItem fav : dataset) {
                     String name = fav.getTextFrom() + fav.getTextTo() + fav.getLang();
                     String json = prefs.getString(name, "NotExist");
 

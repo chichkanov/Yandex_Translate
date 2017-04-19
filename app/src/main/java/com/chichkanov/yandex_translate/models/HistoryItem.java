@@ -1,6 +1,7 @@
 package com.chichkanov.yandex_translate.models;
 
 import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -26,7 +27,7 @@ public class HistoryItem implements Comparable<HistoryItem> {
     @Expose
     private boolean isMarkedFav;
 
-    public HistoryItem(String lang, String to, String from, long date, boolean markedFav){
+    public HistoryItem(String lang, String to, String from, long date, boolean markedFav) {
         this.lang = lang;
         this.to = to;
         this.from = from;
@@ -58,11 +59,9 @@ public class HistoryItem implements Comparable<HistoryItem> {
     public int compareTo(@NonNull HistoryItem o) {
         if (date > o.getDate()) {
             return -1;
-        }
-        else if (date <  o.getDate()) {
+        } else if (date < o.getDate()) {
             return 1;
-        }
-        else {
+        } else {
             return 0;
         }
     }
@@ -71,7 +70,7 @@ public class HistoryItem implements Comparable<HistoryItem> {
         return isMarkedFav;
     }
 
-    public void setMarkedFav(boolean markedFav){
+    public void setMarkedFav(boolean markedFav) {
         isMarkedFav = markedFav;
     }
 }

@@ -12,9 +12,8 @@ public class ConstResources {
     public final static HashMap<String, String> LANGUAGES = createMap();
     public final static String KEY = "trnsl.1.1.20170415T124611Z.ad6b17355364d141.64ba3777be0638c0334939d343b1920945530598";
 
-    private static HashMap<String, String> createMap()
-    {
-        HashMap<String,String> lang = new HashMap<>();
+    private static HashMap<String, String> createMap() {
+        HashMap<String, String> lang = new HashMap<>();
         lang.put("английский", "en");
         lang.put("русский", "ru");
         lang.put("азербайджанский", "az");

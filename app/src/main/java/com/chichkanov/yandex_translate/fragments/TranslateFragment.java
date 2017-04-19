@@ -250,10 +250,9 @@ public class TranslateFragment extends Fragment {
         editor.apply();
     }
 
-    private void saveResponseToFav(YandexTranslateResponse object, String fromText){
+    private void saveResponseToFav(YandexTranslateResponse object, String fromText) {
         // Имя файла представляется в виде ТекстдляпреводаПереводЯзык
         String name = fromText.trim() + object.getText().get(0).trim() + object.getLang();
-        Log.i("Fav item:", fromText.trim() + " " + object.getText().get(0).trim());
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0).trim(), fromText.trim(), new Date().getTime(), !isResponseAlreadyLiked(name));
         String json = gson.toJson(historyItem);
