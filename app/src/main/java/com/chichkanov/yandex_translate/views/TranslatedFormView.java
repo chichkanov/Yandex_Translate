@@ -6,6 +6,7 @@ import android.content.Context;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chichkanov.yandex_translate.R;
+import com.chichkanov.yandex_translate.models.HistoryItem;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
@@ -21,6 +23,8 @@ public class TranslatedFormView extends RelativeLayout {
 
     private TextView textView;
     private ImageButton favButton, copyButton;
+
+    private FavButtonListener favButtonListener;
 
     public TranslatedFormView(Context context) {
         super(context);
@@ -41,7 +45,10 @@ public class TranslatedFormView extends RelativeLayout {
         favButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                favButton.setSelected(!favButton.isSelected());
+                if(favButtonListener != null){
+                    favButton.setSelected(!favButton.isSelected());
+                    favButtonListener.favButtonClick();
+                }
             }
         });
 
@@ -75,5 +82,17 @@ public class TranslatedFormView extends RelativeLayout {
 
     public String getText() {
         return textView.getText().toString();
+    }
+
+    public void setFavButtonState(boolean state){
+        favButton.setSelected(state);
+    }
+
+    public void setFavButtonListener(FavButtonListener favButtonListener){
+        this.favButtonListener = favButtonListener;
+    }
+
+    public interface FavButtonListener{
+        void favButtonClick();
     }
 }

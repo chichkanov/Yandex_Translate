@@ -27,5 +27,5 @@
         android:layout_marginBottom="@dimen/translated_form_margin"
         android:layout_marginLeft="@dimen/translated_form_margin"
         android:layout_marginRight="@dimen/translated_form_margin"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 </LinearLayout>

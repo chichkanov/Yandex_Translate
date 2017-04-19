@@ -23,9 +23,11 @@ import com.chichkanov.yandex_translate.R;
 import com.chichkanov.yandex_translate.adapters.HistoryAdapter;
 import com.chichkanov.yandex_translate.utils.ConstResources;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -76,44 +78,25 @@ public class HistoryFragment extends Fragment implements Toolbar.OnMenuItemClick
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getActivity().setTitle(title);
-        loadCachedResponse();
-
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setOnMenuItemClickListener(this);
     }
 
-    private void initRecyclerView(View view) {
+    protected void initRecyclerView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_history);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        dataset = loadCachedResponse();
+        dataset = loadCacheData();
         adapter = new HistoryAdapter(dataset, new OnFavClickListener() {
             @Override
             public void onFavClick(int position) {
-                addItemToFav();
+                markAsFav(position);
             }
         });
         recyclerView.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
-    }
-
-    private void addItemToFav() {
-        Log.i("CLICK", "IN HISTORY");
-    }
-
-    private List<HistoryItem> loadCachedResponse() {
-        Map<String, String> allEntries = (Map<String, String>) getContext().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE).getAll();
-        List<HistoryItem> list = new ArrayList<>();
-        Gson gson = new Gson();
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            String json = entry.getValue().toString();
-            HistoryItem historyItem = gson.fromJson(json, HistoryItem.class);
-            list.add(new HistoryItem(historyItem.getLang(), historyItem.getTextTo(), historyItem.getTextFrom(), historyItem.getDate(), historyItem.isMarkedFav()));
-        }
-        Collections.sort(list);
-        return list;
     }
 
     @Override
@@ -129,5 +112,34 @@ public class HistoryFragment extends Fragment implements Toolbar.OnMenuItemClick
                 return true;
         }
         return false;
+    }
+
+    protected List<HistoryItem> loadCacheData() {
+        Map<String, String> allEntries = (Map<String, String>) getContext().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE).getAll();
+        List<HistoryItem> list = new ArrayList<>();
+        Gson gson = new Gson();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            String json = entry.getValue().toString();
+            HistoryItem historyItem = gson.fromJson(json, HistoryItem.class);
+            list.add(new HistoryItem(historyItem.getLang(), historyItem.getTextTo(), historyItem.getTextFrom(), historyItem.getDate(), historyItem.isMarkedFav()));
+        }
+        Collections.sort(list);
+        return list;
+    }
+
+    protected void markAsFav(int position) {
+        HistoryItem item = dataset.get(position);
+        item.setMarkedFav(!item.isMarkedFav());
+
+        String name = item.getTextFrom() + item.getTextTo() + item.getLang();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(item);
+
+        SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        editor.putString(name, json);
+        editor.apply();
+
     }
 }

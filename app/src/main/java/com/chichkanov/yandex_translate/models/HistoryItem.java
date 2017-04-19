@@ -70,4 +70,8 @@ public class HistoryItem implements Comparable<HistoryItem> {
     public boolean isMarkedFav() {
         return isMarkedFav;
     }
+
+    public void setMarkedFav(boolean markedFav){
+        isMarkedFav = markedFav;
+    }
 }

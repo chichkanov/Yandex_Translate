@@ -64,6 +64,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
                 @Override
                 public void onClick(View v) {
                     if(listener != null){
+                        fav.setSelected(!fav.isSelected());
                         listener.onFavClick(getAdapterPosition());
                     }
                 }

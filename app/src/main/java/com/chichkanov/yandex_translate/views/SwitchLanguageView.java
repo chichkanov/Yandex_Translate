@@ -48,7 +48,7 @@ public class SwitchLanguageView extends RelativeLayout {
             @Override
             public void onClick(View v) {
                 savePrevSpinnerPos();
-                spinnerChangeListener.swapTranslateResults();
+                if (spinnerChangeListener != null) spinnerChangeListener.swapTranslateResults();
                 int index = spinnerFrom.getSelectedItemPosition();
                 spinnerFrom.setSelection(spinnerTo.getSelectedItemPosition());
                 spinnerTo.setSelection(index);
@@ -59,12 +59,12 @@ public class SwitchLanguageView extends RelativeLayout {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                if(spinnerFrom.getSelectedItemPosition() == spinnerTo.getSelectedItemPosition()){
+                if (spinnerFrom.getSelectedItemPosition() == spinnerTo.getSelectedItemPosition()) {
                     spinnerFrom.setSelection(spinnerTo.getSelectedItemPosition());
                     spinnerTo.setSelection(prevSpinnerFromPos);
                     savePrevSpinnerPos();
                 }
-                spinnerChangeListener.initTranslation();
+                if (spinnerChangeListener != null) spinnerChangeListener.initTranslation();
             }
 
             @Override
@@ -76,12 +76,12 @@ public class SwitchLanguageView extends RelativeLayout {
         spinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(spinnerTo.getSelectedItemPosition() == spinnerFrom.getSelectedItemPosition()){
+                if (spinnerTo.getSelectedItemPosition() == spinnerFrom.getSelectedItemPosition()) {
                     spinnerTo.setSelection(spinnerFrom.getSelectedItemPosition());
                     spinnerFrom.setSelection(prevSpinnerToPos);
                     savePrevSpinnerPos();
                 }
-                spinnerChangeListener.initTranslation();
+                if (spinnerChangeListener != null) spinnerChangeListener.initTranslation();
             }
 
             @Override
@@ -138,8 +138,9 @@ public class SwitchLanguageView extends RelativeLayout {
         this.prevSpinnerToPos = prevSpinnerToPos;
     }
 
-    public interface SpinnerChangeListener{
+    public interface SpinnerChangeListener {
         void initTranslation();
+
         void swapTranslateResults();
     }
 }

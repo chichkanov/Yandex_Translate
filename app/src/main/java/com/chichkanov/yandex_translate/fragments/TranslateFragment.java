@@ -180,10 +180,23 @@ public class TranslateFragment extends Fragment {
             Call<YandexTranslateResponse> call = api.translate(keys);
             call.enqueue(new Callback<YandexTranslateResponse>() {
                 @Override
-                public void onResponse(Call<YandexTranslateResponse> call, Response<YandexTranslateResponse> response) {
+                public void onResponse(Call<YandexTranslateResponse> call, final Response<YandexTranslateResponse> response) {
                     if (response.isSuccessful()) {
                         showTranslatedForm();
+
+                        String name = translateForm.getText().trim() + response.body().getText().get(0).trim() + response.body().getLang();
+                        translatedForm.setFavButtonState(isResponseAlreadyLiked(name));
+
                         translatedForm.setText(response.body().getText().get(0));
+
+                        // Обработка нажатия на кнопку избранного
+                        translatedForm.setFavButtonListener(new TranslatedFormView.FavButtonListener() {
+                            @Override
+                            public void favButtonClick() {
+                                saveResponseToFav(response.body(), translateForm.getText());
+                            }
+                        });
+
                         saveResponse(response.body(), translateForm.getText());
                     } else {
                         Toast.makeText(getContext(), String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
@@ -228,9 +241,23 @@ public class TranslateFragment extends Fragment {
         // Имя файла представляется в виде ТекстдляпреводаПереводЯзык
         String name = fromText.trim() + object.getText().get(0).trim() + object.getLang();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0), fromText, new Date().getTime(), isResponseAlreadyLiked(name));
+        HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0).trim(), fromText.trim(), new Date().getTime(), isResponseAlreadyLiked(name));
         String json = gson.toJson(historyItem);
-        Log.i(object.getText().get(0), String.valueOf(isResponseAlreadyLiked(name)));
+
+        SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(name, json);
+        editor.apply();
+    }
+
+    private void saveResponseToFav(YandexTranslateResponse object, String fromText){
+        // Имя файла представляется в виде ТекстдляпреводаПереводЯзык
+        String name = fromText.trim() + object.getText().get(0).trim() + object.getLang();
+        Log.i("Fav item:", fromText.trim() + " " + object.getText().get(0).trim());
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        HistoryItem historyItem = new HistoryItem(object.getLang(), object.getText().get(0).trim(), fromText.trim(), new Date().getTime(), !isResponseAlreadyLiked(name));
+        String json = gson.toJson(historyItem);
+
         SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(name, json);
