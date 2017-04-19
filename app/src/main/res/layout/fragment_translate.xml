@@ -1,10 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_translate_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/grey"
-    android:orientation="vertical"
     tools:context="com.chichkanov.yandex_translate.fragments.TranslateFragment">
 
     <com.chichkanov.yandex_translate.views.SwitchLanguageView
@@ -16,16 +16,16 @@
         android:id="@+id/view_translate_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/translate_form_margin">
-
-    </com.chichkanov.yandex_translate.views.TranslateFormView>
+        android:layout_below="@+id/view_switch_form"
+        android:layout_margin="@dimen/translate_form_margin" />
 
     <com.chichkanov.yandex_translate.views.TranslatedFormView
         android:id="@+id/view_translated_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/view_translate_form"
         android:layout_marginBottom="@dimen/translated_form_margin"
         android:layout_marginLeft="@dimen/translated_form_margin"
         android:layout_marginRight="@dimen/translated_form_margin"
         android:visibility="invisible" />
-</LinearLayout>
+</RelativeLayout>

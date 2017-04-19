@@ -1,15 +1,20 @@
 package com.chichkanov.yandex_translate.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.chichkanov.yandex_translate.R;
@@ -43,11 +48,12 @@ public class TranslateFragment extends Fragment {
 
 
     private boolean autoTranslate;
-    private boolean autoDetectLand;
+    private boolean autoDetectLang;
 
     private TranslateFormView translateForm;
     private TranslatedFormView translatedForm;
     private SwitchLanguageView switchLanguageForm;
+    private RelativeLayout relativeLayout;
 
     private String title;
 
@@ -78,6 +84,7 @@ public class TranslateFragment extends Fragment {
         translateForm = (TranslateFormView) view.findViewById(R.id.view_translate_form);
         translatedForm = (TranslatedFormView) view.findViewById(R.id.view_translated_form);
         switchLanguageForm = (SwitchLanguageView) view.findViewById(R.id.view_switch_form);
+        relativeLayout = (RelativeLayout) view.findViewById(R.id.rl_translate_fragment);
         return view;
     }
 
@@ -88,7 +95,7 @@ public class TranslateFragment extends Fragment {
         restoreSwitchLanguageState();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        autoDetectLand = prefs.getBoolean("trans_auto_detect_lang", true);
+        autoDetectLang = prefs.getBoolean("trans_auto_detect_lang", true);
         autoTranslate = prefs.getBoolean("trans_auto_translate", true);
 
         // Моментальынй перевод текста при его изменении в форме для ввода
@@ -96,13 +103,19 @@ public class TranslateFragment extends Fragment {
             @Override
             public void initInstantTranslation() {
                 // Загружаем если включена функция моментального перевода
-                if (autoTranslate) loadTranslate();
+                if (autoTranslate) {
+                    if (autoDetectLang) detectLanguageAndLoad();
+                    else loadTranslate();
+                }
             }
 
             @Override
             public void initNormalTranslation() {
                 // Загружаем перевод только если выключена функция моментального перевода
-                if (!autoTranslate) loadTranslate();
+                if (!autoTranslate) {
+                    if (autoDetectLang) detectLanguageAndLoad();
+                    else loadTranslate();
+                }
             }
 
             @Override
@@ -169,7 +182,6 @@ public class TranslateFragment extends Fragment {
 
     private void loadTranslate() {
         if (translateForm.getText().length() > 0) {
-            if (autoDetectLand) detectLanguage();
             String translation = ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerFromText()) + "-"
                     + ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerToText());
             Map<String, String> keys = new HashMap<>();
@@ -205,12 +217,13 @@ public class TranslateFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<YandexTranslateResponse> call, Throwable t) {
+
                 }
             });
         }
     }
 
-    private void detectLanguage() {
+    private void detectLanguageAndLoad() {
         Map<String, String> keys = new HashMap<>();
         keys.put("key", ConstResources.KEY);
         keys.put("hint", "en,ru");
@@ -225,13 +238,15 @@ public class TranslateFragment extends Fragment {
                     if (response.body().getCode() == 200 && response.body().getLang().length() > 0) {
                         switchLanguageForm.setPrevSpinnerFromPos(switchLanguageForm.getSpinnerFromPos());
                         switchLanguageForm.setSpinnerTextFrom(response.body().getLang());
+                        loadTranslate();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<YandexDetectResponse> call, Throwable t) {
-
+                hideKeyboard();
+                Snackbar.make(relativeLayout, "Отсутствует подключение к интернету", Snackbar.LENGTH_LONG).show();
             }
         });
     }
@@ -272,5 +287,10 @@ public class TranslateFragment extends Fragment {
             return historyItem.isMarkedFav();
         }
         return false;
+    }
+
+    private void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(relativeLayout.getWindowToken(), 0);
     }
 }
