@@ -1,4 +1,4 @@
-#  Translator    ![Icon](https://github.com/chichkanov/Yandex_Translate/blob/master/static/icon.png) 
+#  ![Icon](https://github.com/chichkanov/Yandex_Translate/blob/master/static/icon.png)     Translator 
 
 Translator android application 
 Project for Yandex "Mobilization" school
