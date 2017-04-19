@@ -1,4 +1,7 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.adapters;
+
+import com.chichkanov.yandex_translate.models.HistoryItem;
+import com.chichkanov.yandex_translate.interfaces.OnFavClickListener;
 
 import java.util.List;
 

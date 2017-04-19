@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.chichkanov.yandex_translate.HistoryFragment">
+    tools:context="com.chichkanov.yandex_translate.fragments.HistoryFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_history"

@@ -1,4 +1,4 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.views;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -12,6 +12,8 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.chichkanov.yandex_translate.R;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 

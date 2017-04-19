@@ -1,15 +1,13 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.models;
 
-/*
-  Модель ответа с сервера яндекс переводчика для получения перевода
+/**
+ * Модель ответа с сервера для определения языка
  */
-
-import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class YandexTranslateResponse {
+public class YandexDetectResponse {
 
     @SerializedName("code")
     @Expose
@@ -17,9 +15,6 @@ public class YandexTranslateResponse {
     @SerializedName("lang")
     @Expose
     private String lang;
-    @SerializedName("text")
-    @Expose
-    private List<String> text = null;
 
     public int getCode() {
         return code;
@@ -37,14 +32,4 @@ public class YandexTranslateResponse {
         this.lang = lang;
     }
 
-    public List<String> getText() {
-        return text;
-    }
-
-    public void setText(List<String> text) {
-        this.text = text;
-    }
 }
-
-
-

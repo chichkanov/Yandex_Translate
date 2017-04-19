@@ -1,7 +1,6 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chichkanov.yandex_translate.models.HistoryItem;
+import com.chichkanov.yandex_translate.interfaces.OnFavClickListener;
+import com.chichkanov.yandex_translate.R;
+import com.chichkanov.yandex_translate.adapters.FavAdapter;
+import com.chichkanov.yandex_translate.utils.ConstResources;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;

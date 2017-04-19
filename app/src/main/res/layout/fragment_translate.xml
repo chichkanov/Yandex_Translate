@@ -5,22 +5,22 @@
     android:animateLayoutChanges="true"
     android:background="@color/grey"
     android:orientation="vertical"
-    tools:context="com.chichkanov.yandex_translate.TranslateFragment">
+    tools:context="com.chichkanov.yandex_translate.fragments.TranslateFragment">
 
-    <com.chichkanov.yandex_translate.SwitchLanguageView
+    <com.chichkanov.yandex_translate.views.SwitchLanguageView
         android:id="@+id/view_switch_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <com.chichkanov.yandex_translate.TranslateFormView
+    <com.chichkanov.yandex_translate.views.TranslateFormView
         android:id="@+id/view_translate_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/translate_form_margin">
 
-    </com.chichkanov.yandex_translate.TranslateFormView>
+    </com.chichkanov.yandex_translate.views.TranslateFormView>
 
-    <com.chichkanov.yandex_translate.TranslatedFormView
+    <com.chichkanov.yandex_translate.views.TranslatedFormView
         android:id="@+id/view_translated_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

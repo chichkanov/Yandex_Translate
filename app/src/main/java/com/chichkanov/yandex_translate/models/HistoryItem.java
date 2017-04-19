@@ -1,4 +1,4 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.models;
 
 import android.support.annotation.NonNull;
 import com.google.gson.annotations.Expose;

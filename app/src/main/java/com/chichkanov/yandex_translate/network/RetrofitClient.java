@@ -1,4 +1,4 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.network;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

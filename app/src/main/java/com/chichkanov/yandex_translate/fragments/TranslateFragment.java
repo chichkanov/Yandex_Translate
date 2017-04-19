@@ -1,34 +1,32 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.SharedPreferencesCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.chichkanov.yandex_translate.R;
+import com.chichkanov.yandex_translate.views.SwitchLanguageView;
+import com.chichkanov.yandex_translate.views.TranslateFormView;
+import com.chichkanov.yandex_translate.views.TranslatedFormView;
+import com.chichkanov.yandex_translate.models.YandexDetectResponse;
+import com.chichkanov.yandex_translate.network.YandexTranslateApi;
+import com.chichkanov.yandex_translate.models.YandexTranslateResponse;
+import com.chichkanov.yandex_translate.network.RetrofitClient;
+import com.chichkanov.yandex_translate.models.HistoryItem;
+import com.chichkanov.yandex_translate.utils.ConstResources;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;

@@ -1,4 +1,4 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.views;
 
 import android.content.Context;
 import android.os.Handler;
@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.chichkanov.yandex_translate.R;
 
 public class TranslateFormView extends RelativeLayout{
 

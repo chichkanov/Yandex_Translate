@@ -1,4 +1,4 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,6 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chichkanov.yandex_translate.models.HistoryItem;
+import com.chichkanov.yandex_translate.interfaces.OnFavClickListener;
+import com.chichkanov.yandex_translate.R;
+import com.chichkanov.yandex_translate.adapters.HistoryAdapter;
+import com.chichkanov.yandex_translate.utils.ConstResources;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;

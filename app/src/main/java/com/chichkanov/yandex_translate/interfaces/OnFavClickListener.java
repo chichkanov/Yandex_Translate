@@ -1,4 +1,4 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.interfaces;
 
 /**
  * Created by chichkanov on 18.04.17.

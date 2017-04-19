@@ -1,9 +1,8 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.views;
 
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +10,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+
+import com.chichkanov.yandex_translate.R;
+import com.chichkanov.yandex_translate.utils.ConstResources;
 
 public class SwitchLanguageView extends RelativeLayout {
 

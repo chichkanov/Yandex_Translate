@@ -1,7 +1,9 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.fragments;
 
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;
+
+import com.chichkanov.yandex_translate.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 

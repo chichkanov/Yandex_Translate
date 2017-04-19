@@ -1,4 +1,7 @@
-package com.chichkanov.yandex_translate;
+package com.chichkanov.yandex_translate.network;
+
+import com.chichkanov.yandex_translate.models.YandexTranslateResponse;
+import com.chichkanov.yandex_translate.models.YandexDetectResponse;
 
 import java.util.Map;
 
