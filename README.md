@@ -20,6 +20,8 @@ Project for Yandex "Mobilization" school
 
 ∙ Favourite translations
 
+∙ Support for android 4.1+
+
 ∙ Material design
 
 ∙ Landscape mode support
