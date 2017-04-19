@@ -1,4 +1,4 @@
-#  ![Icon](https://github.com/chichkanov/Yandex_Translate/blob/master/static/icon.png)     Translator 
+#  ![Icon](https://github.com/chichkanov/Yandex_Translate/blob/master/static/icon.png)  Translator 
 
 Translator android application 
 
