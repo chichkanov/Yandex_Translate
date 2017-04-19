@@ -25,6 +25,7 @@ public class NavigationActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -39,7 +40,7 @@ public class NavigationActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             navigationView.getMenu().getItem(MENU_TRANSLATE).setChecked(true);
             onNavigationItemSelected(navigationView.getMenu().getItem(MENU_TRANSLATE));
         }

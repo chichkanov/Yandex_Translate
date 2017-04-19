@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +44,7 @@ public class TranslateFormView extends RelativeLayout{
     }
 
     private void initViews() {
-        LayoutInflater.from(getContext()).inflate(R.layout.view_et_translate, this);
+        LayoutInflater.from(getContext()).inflate(R.layout.view_form_translate, this);
         editText = (EditText) findViewById(R.id.et_translate);
         imageButton = (ImageButton) findViewById(R.id.btn_translate_clear);
 
@@ -58,7 +57,8 @@ public class TranslateFormView extends RelativeLayout{
         });
 
         editText.setHorizontallyScrolling(false);
-        editText.setLines(4);
+        editText.setMinLines(4);
+        editText.setMaxLines(1000);
 
         // Добавляем литенер для моментального перевода при изменении текста
         editText.addTextChangedListener(new TextWatcher() {
