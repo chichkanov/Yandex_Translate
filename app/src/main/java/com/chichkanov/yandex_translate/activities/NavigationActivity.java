@@ -109,7 +109,6 @@ public class NavigationActivity extends AppCompatActivity
     }
 
 
-
     private void addFragment(Fragment fragment) {
         hideKeyboard();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -117,9 +116,9 @@ public class NavigationActivity extends AppCompatActivity
         ft.commit();
     }
 
-    private void hideKeyboard(){
+    private void hideKeyboard() {
         FrameLayout frameLayout = (FrameLayout) findViewById(R.id.content_navigation);
-        InputMethodManager imm = (InputMethodManager)this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(frameLayout.getWindowToken(), 0);
     }
 }

@@ -1,10 +1,12 @@
 package com.chichkanov.yandex_translate.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -117,7 +119,7 @@ public class FavFragment extends Fragment implements Toolbar.OnMenuItemClickList
         HistoryItem item = dataset.get(position);
         item.setMarkedFav(!item.isMarkedFav());
 
-        if(!keepInList){
+        if (!keepInList) {
             dataset.remove(position);
         }
 
@@ -157,30 +159,44 @@ public class FavFragment extends Fragment implements Toolbar.OnMenuItemClickList
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.history_action_delete:
-                SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                Gson gson = new Gson();
+                if (dataset.size() > 0) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Избранное")
+                            .setMessage("Вы действительно хотите очистить избранное?")
+                            .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
-                /*
+                                /*
                 Удаление элемента из избранного
                 Десериализуем объект из shared prefs, изменяем его состояние (избранное/неизбранное) и
                 помещаем обратно в preferences
                 */
-                for (HistoryItem fav : dataset) {
-                    String name = fav.getTextFrom() + fav.getTextTo() + fav.getLang();
-                    String json = prefs.getString(name, "NotExist");
 
-                    HistoryItem favItem = gson.fromJson(json, HistoryItem.class);
-                    favItem.setMarkedFav(false);
+                                    SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    Gson gson = new Gson();
 
-                    Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
-                    String newJson = gsonBuilder.toJson(favItem);
-                    editor.putString(name, newJson);
+                                    for (HistoryItem fav : dataset) {
+                                        String name = fav.getTextFrom() + fav.getTextTo() + fav.getLang();
+                                        String json = prefs.getString(name, "NotExist");
+
+                                        HistoryItem favItem = gson.fromJson(json, HistoryItem.class);
+                                        favItem.setMarkedFav(false);
+
+                                        Gson gsonBuilder = new GsonBuilder().setPrettyPrinting().create();
+                                        String newJson = gsonBuilder.toJson(favItem);
+                                        editor.putString(name, newJson);
+                                    }
+                                    editor.apply();
+                                    dataset.clear();
+                                    adapter.notifyDataSetChanged();
+                                }
+                            })
+                            .setNegativeButton("Отмена", null).show();
                 }
-                editor.apply();
-                dataset.clear();
-                adapter.notifyDataSetChanged();
                 return true;
+
         }
         return false;
     }

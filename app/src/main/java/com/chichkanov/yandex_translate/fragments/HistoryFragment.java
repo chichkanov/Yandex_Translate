@@ -2,10 +2,12 @@ package com.chichkanov.yandex_translate.fragments;
 
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -135,12 +137,23 @@ public class HistoryFragment extends Fragment implements Toolbar.OnMenuItemClick
         switch (item.getItemId()) {
             // Очищение истории путем очистки shared prefs
             case R.id.history_action_delete:
-                SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.clear();
-                editor.apply();
-                dataset.clear();
-                adapter.notifyDataSetChanged();
+                if(dataset.size() > 0) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("История")
+                            .setMessage("Вы действительно хотите очистить историю?")
+                            .setPositiveButton("Да", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.clear();
+                                    editor.apply();
+                                    dataset.clear();
+                                    adapter.notifyDataSetChanged();
+                                }
+                            })
+                            .setNegativeButton("Отмена", null).show();
+                }
                 return true;
         }
         return false;
