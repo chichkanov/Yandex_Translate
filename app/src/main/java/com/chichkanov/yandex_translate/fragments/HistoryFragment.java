@@ -1,5 +1,6 @@
 package com.chichkanov.yandex_translate.fragments;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -80,7 +82,7 @@ public class HistoryFragment extends Fragment implements Toolbar.OnMenuItemClick
         toolbar.setOnMenuItemClickListener(this);
     }
 
-    protected void initRecyclerView(View view) {
+    private void initRecyclerView(View view) {
         recyclerView = (RecyclerView) view.findViewById(R.id.rv_history);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -93,8 +95,39 @@ public class HistoryFragment extends Fragment implements Toolbar.OnMenuItemClick
             }
         });
         recyclerView.setAdapter(adapter);
+
+        // Удаление по свайпу
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                removeItemFromHistory(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
+    }
+
+    // Удалить из истории
+    private void removeItemFromHistory(int position) {
+        HistoryItem item = dataset.get(position);
+        dataset.remove(position);
+        String name = item.getTextFrom() + item.getTextTo() + item.getLang();
+
+        SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove(name);
+        editor.apply();
     }
 
     @Override
@@ -113,7 +146,7 @@ public class HistoryFragment extends Fragment implements Toolbar.OnMenuItemClick
         return false;
     }
 
-    protected List<HistoryItem> loadCacheData() {
+    private List<HistoryItem> loadCacheData() {
         Map<String, String> allEntries = (Map<String, String>) getContext().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE).getAll();
         List<HistoryItem> list = new ArrayList<>();
         Gson gson = new Gson();
@@ -126,7 +159,7 @@ public class HistoryFragment extends Fragment implements Toolbar.OnMenuItemClick
         return list;
     }
 
-    protected void markAsFav(int position) {
+    private void markAsFav(int position) {
         HistoryItem item = dataset.get(position);
         item.setMarkedFav(!item.isMarkedFav());
 

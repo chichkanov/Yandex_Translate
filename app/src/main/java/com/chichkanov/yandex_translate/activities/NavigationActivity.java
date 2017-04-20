@@ -1,5 +1,6 @@
 package com.chichkanov.yandex_translate.activities;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -9,7 +10,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 
 import com.chichkanov.yandex_translate.R;
 import com.chichkanov.yandex_translate.fragments.SettingsFragment;
@@ -32,6 +37,27 @@ public class NavigationActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                hideKeyboard();
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -82,9 +108,18 @@ public class NavigationActivity extends AppCompatActivity
         return true;
     }
 
+
+
     private void addFragment(Fragment fragment) {
+        hideKeyboard();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft = ft.replace(R.id.content_navigation, fragment);
         ft.commit();
+    }
+
+    private void hideKeyboard(){
+        FrameLayout frameLayout = (FrameLayout) findViewById(R.id.content_navigation);
+        InputMethodManager imm = (InputMethodManager)this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(frameLayout.getWindowToken(), 0);
     }
 }

@@ -9,6 +9,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -83,19 +84,42 @@ public class FavFragment extends Fragment implements Toolbar.OnMenuItemClickList
         adapter = new FavAdapter(dataset, new OnFavClickListener() {
             @Override
             public void onFavClick(int position) {
-                markAsFav(position);
+                markAsFav(position, true);
             }
         });
         recyclerView.setAdapter(adapter);
+
+        // Удаление по свайпу
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                markAsFav(viewHolder.getAdapterPosition(), false);
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
 
     }
 
     // Логика добавления в избранное отличается, так как тут нам нужно убрать элемент из избранного
-    private void markAsFav(int position) {
+    private void markAsFav(int position, boolean keepInList) {
         HistoryItem item = dataset.get(position);
         item.setMarkedFav(!item.isMarkedFav());
+
+        if(!keepInList){
+            dataset.remove(position);
+        }
 
         String name = item.getTextFrom() + item.getTextTo() + item.getLang();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
