@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.chichkanov.yandex_translate.R;
 
+// View для формы "что переводить"
 public class TranslateFormView extends RelativeLayout{
 
     private EditText editText;
@@ -24,6 +25,7 @@ public class TranslateFormView extends RelativeLayout{
     private Handler handler;
 
     // Раннбл для перевода текста
+    // Требуется для мгновенного перевода, чтобы не дергать апи каждый раз, а делать это с задержкой
     Runnable instantLoaderTask = new Runnable() {
         @Override
         public void run() {
@@ -56,6 +58,7 @@ public class TranslateFormView extends RelativeLayout{
             }
         });
 
+        // Устанавливаем параметры edit text для перевода
         editText.setHorizontallyScrolling(false);
         editText.setMinLines(4);
         editText.setMaxLines(1000);
@@ -72,6 +75,7 @@ public class TranslateFormView extends RelativeLayout{
 
             }
 
+            // Как только текст изменился иницируем загрузку перевода
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().trim().length() > 0 && s.toString().charAt(s.toString().length()-1) != ' ') {
@@ -115,8 +119,11 @@ public class TranslateFormView extends RelativeLayout{
     // Интерфейс для загрузки перевода
     // Вызывается при изменении текста для моментального перевода
     public interface TextChangingListener {
+        // Начать мгновенную загрузку
         void initInstantTranslation();
+        // Начать обычную загрузку (по нажатию ентер)
         void initNormalTranslation();
+        // Удалить текст
         void removeTranslation();
     }
 }

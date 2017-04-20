@@ -1,9 +1,6 @@
 package com.chichkanov.yandex_translate.models;
 
-/**
- * Модель ответа с сервера для определения языка
- */
-
+// Модель ответа с сервера для определения языка
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

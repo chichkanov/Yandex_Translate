@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+// Модель объекта, хранящегося в истории или в избранном
 public class HistoryItem implements Comparable<HistoryItem> {
 
     @SerializedName("lang")

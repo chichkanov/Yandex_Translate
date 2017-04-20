@@ -5,6 +5,9 @@ import com.chichkanov.yandex_translate.interfaces.OnFavClickListener;
 
 import java.util.List;
 
+/*
+Наследуемся от адаптера для истории, так как эти экраны обладают одинаковым функционалом
+*/
 
 public class FavAdapter extends HistoryAdapter {
 

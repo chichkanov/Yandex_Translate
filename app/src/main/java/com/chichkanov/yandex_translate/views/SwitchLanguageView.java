@@ -14,12 +14,16 @@ import android.widget.Spinner;
 import com.chichkanov.yandex_translate.R;
 import com.chichkanov.yandex_translate.utils.ConstResources;
 
+// View для выбора языка
 public class SwitchLanguageView extends RelativeLayout {
 
     private Spinner spinnerFrom, spinnerTo;
     private ImageButton switchLanguage;
     private ArrayAdapter<CharSequence> adapter;
     private SpinnerChangeListener spinnerChangeListener;
+
+    // Предыдущий выбор спиннера
+    // Нужен для проверки, что юзер не выбрал тот же язык
     private int prevSpinnerFromPos;
     private int prevSpinnerToPos;
 
@@ -44,6 +48,7 @@ public class SwitchLanguageView extends RelativeLayout {
         spinnerFrom.setAdapter(adapter);
         spinnerTo.setAdapter(adapter);
 
+        // Свап языков
         switchLanguage.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +60,7 @@ public class SwitchLanguageView extends RelativeLayout {
             }
         });
 
+        // Выбор языка перевода
         spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -73,6 +79,7 @@ public class SwitchLanguageView extends RelativeLayout {
             }
         });
 
+        // Выбор куда переводить
         spinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -91,6 +98,7 @@ public class SwitchLanguageView extends RelativeLayout {
         });
     }
 
+    // Сохранение предыдущего состояния языков
     private void savePrevSpinnerPos() {
         prevSpinnerFromPos = spinnerFrom.getSelectedItemPosition();
         prevSpinnerToPos = spinnerTo.getSelectedItemPosition();
@@ -138,9 +146,12 @@ public class SwitchLanguageView extends RelativeLayout {
         this.prevSpinnerToPos = prevSpinnerToPos;
     }
 
+    // Интерфейс для загрузки перевода при изменении языка
     public interface SpinnerChangeListener {
+        // Начать загрузку
         void initTranslation();
 
+        // Свапнули языки, определить что делать в зависимости от выбранного языка
         void swapTranslateResults();
     }
 }

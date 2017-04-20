@@ -5,10 +5,11 @@ import java.util.Map;
 
 public class ConstResources {
 
+    // Имена shared preferences для состояния языков (определяются спиннерами) и кэша (история и избранное)
     public final static String PREFS_SPINNERS_STATE = "spinners_state";
     public final static String PREFS_CACHE_NAME = "translation_cache";
-    public final static String PREFS_FAV_NAME = "translation_fav";
 
+    // Массив языков и их кодов
     public final static HashMap<String, String> LANGUAGES = createMap();
     public final static String KEY = "trnsl.1.1.20170415T124611Z.ad6b17355364d141.64ba3777be0638c0334939d343b1920945530598";
 
@@ -106,6 +107,7 @@ public class ConstResources {
         return lang;
     }
 
+    // Получить ключ по значению языка
     public static String getKeyByValue(String value) {
         for (HashMap.Entry<String, String> entry : LANGUAGES.entrySet()) {
             if (entry.getValue().equals(value)) {

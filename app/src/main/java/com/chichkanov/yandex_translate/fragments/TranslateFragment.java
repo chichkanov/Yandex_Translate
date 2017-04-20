@@ -46,7 +46,6 @@ public class TranslateFragment extends Fragment {
     private static final String TRANSLATION_SPINNER_FROM = "Translation_spinner_from";
     private static final String TRANSLATION_SPINNER_TO = "Translation_spinner_to";
 
-
     private boolean autoTranslate;
     private boolean autoDetectLang;
 
@@ -92,9 +91,13 @@ public class TranslateFragment extends Fragment {
     public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getActivity().setTitle(title);
+
+        // Восстанавливаем настройки языка при новом запуске или повороте экрана
         restoreSwitchLanguageState();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        // Достае нстройки авто-определения языка и мгновенного преевода
         autoDetectLang = prefs.getBoolean("trans_auto_detect_lang", true);
         autoTranslate = prefs.getBoolean("trans_auto_translate", true);
 
@@ -142,6 +145,7 @@ public class TranslateFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        //
         outState.putString(CURRENT_TRANSLATION, translatedForm.getText());
     }
 
@@ -151,6 +155,7 @@ public class TranslateFragment extends Fragment {
         saveSwitchLanguageState();
     }
 
+    // Сохранение состояния языка
     private void saveSwitchLanguageState() {
         SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -160,6 +165,7 @@ public class TranslateFragment extends Fragment {
     }
 
 
+    // Восстановление состояния языка
     private void restoreSwitchLanguageState() {
         SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_SPINNERS_STATE, Context.MODE_PRIVATE);
         int pos1 = prefs.getInt(TRANSLATION_SPINNER_FROM, 0);
@@ -170,20 +176,28 @@ public class TranslateFragment extends Fragment {
         switchLanguageForm.setPrevSpinnerToPos(pos2);
     }
 
+    // Скрытие формы перевода
     private void hideTranslatedForm() {
         translatedForm.clearText();
         translatedForm.setVisibility(View.INVISIBLE);
     }
 
+    // Показ формы перевода
     private void showTranslatedForm() {
         translatedForm.setVisibility(View.VISIBLE);
     }
 
-
+    // Загрузка перевода
     private void loadTranslate() {
+        // Загружаем только если ввели текст длины больше 0
         if (translateForm.getText().length() > 0) {
+            Log.i("Translate", "kek");
+
+            // Язык перевода
             String translation = ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerFromText()) + "-"
                     + ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerToText());
+
+            // Параметры запроса к апи яндекс переводчика
             Map<String, String> keys = new HashMap<>();
             keys.put("key", ConstResources.KEY);
             keys.put("text", translateForm.getText());
@@ -223,6 +237,7 @@ public class TranslateFragment extends Fragment {
         }
     }
 
+    // Определить язык и загрузить перевод
     private void detectLanguageAndLoad() {
         Map<String, String> keys = new HashMap<>();
         keys.put("key", ConstResources.KEY);
@@ -265,6 +280,7 @@ public class TranslateFragment extends Fragment {
         editor.apply();
     }
 
+    // Сохранение в избранное
     private void saveResponseToFav(YandexTranslateResponse object, String fromText) {
         // Имя файла представляется в виде ТекстдляпреводаПереводЯзык
         String name = fromText.trim() + object.getText().get(0).trim() + object.getLang();
@@ -278,11 +294,12 @@ public class TranslateFragment extends Fragment {
         editor.apply();
     }
 
+    // Есть ли перевод уже в избранном
     private boolean isResponseAlreadyLiked(String name) {
         Map<String, String> allEntries = (Map<String, String>) getContext().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE).getAll();
         if (allEntries.containsKey(name)) {
             Gson gson = new Gson();
-            String json = allEntries.get(name).toString();
+            String json = allEntries.get(name);
             HistoryItem historyItem = gson.fromJson(json, HistoryItem.class);
             return historyItem.isMarkedFav();
         }

@@ -19,6 +19,7 @@ import com.chichkanov.yandex_translate.models.HistoryItem;
 
 import static android.content.Context.CLIPBOARD_SERVICE;
 
+// View для формы "переведенное слово"
 public class TranslatedFormView extends RelativeLayout {
 
     private TextView textView;
@@ -42,16 +43,19 @@ public class TranslatedFormView extends RelativeLayout {
         favButton = (ImageButton) findViewById(R.id.btn_translated_fav);
         copyButton = (ImageButton) findViewById(R.id.btn_translated_copy);
 
+        // обработка нажатия на избранное
         favButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(favButtonListener != null){
+                    // Определяем состояние и иницируем нажатия
                     favButton.setSelected(!favButton.isSelected());
                     favButtonListener.favButtonClick();
                 }
             }
         });
 
+        // Нажатия на кнопки копировать в буфер обмена
         copyButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +68,7 @@ public class TranslatedFormView extends RelativeLayout {
 
         TextView tvCopyright = (TextView) findViewById(R.id.tv_yandex_copyright);
 
+        // Устанавливаем гиперссылку на текст копирайта в зависимости от версии индроида
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
             tvCopyright.setText( Html.fromHtml("<a href=\"https://translate.yandex.ru\">Переведено сервисом «Яндекс.Переводчик»</a>", Html.FROM_HTML_MODE_LEGACY));
         } else {
@@ -92,6 +97,7 @@ public class TranslatedFormView extends RelativeLayout {
         this.favButtonListener = favButtonListener;
     }
 
+    // Интерфейс для обработки нажатия кнопки избранного
     public interface FavButtonListener{
         void favButtonClick();
     }

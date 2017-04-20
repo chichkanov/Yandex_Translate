@@ -3,10 +3,7 @@ package com.chichkanov.yandex_translate.network;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by chichkanov on 16.04.17.
- */
-
+// Клиент ретрофита
 public class RetrofitClient {
 
     private final static String URL = "https://translate.yandex.net";

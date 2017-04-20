@@ -9,7 +9,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -137,6 +136,12 @@ public class FavFragment extends Fragment implements Toolbar.OnMenuItemClickList
                 SharedPreferences prefs = getActivity().getSharedPreferences(ConstResources.PREFS_CACHE_NAME, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 Gson gson = new Gson();
+
+                /*
+                Удаление элемента из избранного
+                Десериализуем объект из shared prefs, изменяем его состояние (избранное/неизбранное) и
+                помещаем обратно в preferences
+                */
                 for (HistoryItem fav : dataset) {
                     String name = fav.getTextFrom() + fav.getTextTo() + fav.getLang();
                     String json = prefs.getString(name, "NotExist");

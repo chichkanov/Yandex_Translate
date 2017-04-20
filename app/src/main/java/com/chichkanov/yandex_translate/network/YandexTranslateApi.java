@@ -10,10 +10,7 @@ import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
-/**
- * Retrofit интерфейс для работы с апи переводчика
- */
-
+// ретрофит интерфейс для работы с апи яндекс переводчика
 public interface YandexTranslateApi {
     @FormUrlEncoded
     @POST("/api/v1.5/tr.json/translate")

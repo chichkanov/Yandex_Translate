@@ -1,9 +1,7 @@
 package com.chichkanov.yandex_translate.models;
 
-/*
-  Модель ответа с сервера яндекс переводчика для получения перевода
- */
 
+// Модель ответа с сервера яндекс переводчика для получения перевода
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
