@@ -3,6 +3,8 @@ package com.chichkanov.yandex_translate.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -189,81 +191,91 @@ public class TranslateFragment extends Fragment {
 
     // Загрузка перевода
     private void loadTranslate() {
-        // Загружаем только если ввели текст длины больше 0
+        // Загружаем только если ввели текст длины больше 0 и есть интернет соединение
         if (translateForm.getText().length() > 0) {
-            Log.i("Translate", "kek");
+            if(isNetworkAvailable()) {
+                // Язык перевода
+                String translation = ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerFromText()) + "-"
+                        + ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerToText());
 
-            // Язык перевода
-            String translation = ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerFromText()) + "-"
-                    + ConstResources.LANGUAGES.get(switchLanguageForm.getSpinnerToText());
+                // Параметры запроса к апи яндекс переводчика
+                Map<String, String> keys = new HashMap<>();
+                keys.put("key", ConstResources.KEY);
+                keys.put("text", translateForm.getText());
+                keys.put("lang", translation);
 
-            // Параметры запроса к апи яндекс переводчика
-            Map<String, String> keys = new HashMap<>();
-            keys.put("key", ConstResources.KEY);
-            keys.put("text", translateForm.getText());
-            keys.put("lang", translation);
+                Call<YandexTranslateResponse> call = api.translate(keys);
+                call.enqueue(new Callback<YandexTranslateResponse>() {
+                    @Override
+                    public void onResponse(Call<YandexTranslateResponse> call, final Response<YandexTranslateResponse> response) {
+                        if (response.isSuccessful()) {
+                            showTranslatedForm();
 
-            Call<YandexTranslateResponse> call = api.translate(keys);
-            call.enqueue(new Callback<YandexTranslateResponse>() {
-                @Override
-                public void onResponse(Call<YandexTranslateResponse> call, final Response<YandexTranslateResponse> response) {
-                    if (response.isSuccessful()) {
-                        showTranslatedForm();
+                            String name = translateForm.getText().trim() + response.body().getText().get(0).trim() + response.body().getLang();
+                            translatedForm.setFavButtonState(isResponseAlreadyLiked(name));
 
-                        String name = translateForm.getText().trim() + response.body().getText().get(0).trim() + response.body().getLang();
-                        translatedForm.setFavButtonState(isResponseAlreadyLiked(name));
+                            translatedForm.setText(response.body().getText().get(0));
 
-                        translatedForm.setText(response.body().getText().get(0));
+                            // Обработка нажатия на кнопку избранного
+                            translatedForm.setFavButtonListener(new TranslatedFormView.FavButtonListener() {
+                                @Override
+                                public void favButtonClick() {
+                                    saveResponseToFav(response.body(), translateForm.getText());
+                                }
+                            });
 
-                        // Обработка нажатия на кнопку избранного
-                        translatedForm.setFavButtonListener(new TranslatedFormView.FavButtonListener() {
-                            @Override
-                            public void favButtonClick() {
-                                saveResponseToFav(response.body(), translateForm.getText());
-                            }
-                        });
-
-                        saveResponse(response.body(), translateForm.getText());
-                    } else {
-                        Toast.makeText(getContext(), String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                            saveResponse(response.body(), translateForm.getText());
+                        } else {
+                            Toast.makeText(getContext(), String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<YandexTranslateResponse> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<YandexTranslateResponse> call, Throwable t) {
 
-                }
-            });
+                    }
+                });
+            }
+            else{
+                hideKeyboard();
+                Snackbar.make(relativeLayout, "Отсутствует подключение к интернету", Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 
     // Определить язык и загрузить перевод
     private void detectLanguageAndLoad() {
-        Map<String, String> keys = new HashMap<>();
-        keys.put("key", ConstResources.KEY);
-        keys.put("hint", "en,ru");
-        keys.put("text", translateForm.getText());
+        if(isNetworkAvailable()) {
+            Map<String, String> keys = new HashMap<>();
+            keys.put("key", ConstResources.KEY);
+            keys.put("hint", "en,ru");
+            keys.put("text", translateForm.getText());
 
-        Call<YandexDetectResponse> call = api.detectLang(keys);
+            Call<YandexDetectResponse> call = api.detectLang(keys);
 
-        call.enqueue(new Callback<YandexDetectResponse>() {
-            @Override
-            public void onResponse(Call<YandexDetectResponse> call, Response<YandexDetectResponse> response) {
-                if (response.isSuccessful()) {
-                    if (response.body().getCode() == 200 && response.body().getLang().length() > 0) {
-                        switchLanguageForm.setPrevSpinnerFromPos(switchLanguageForm.getSpinnerFromPos());
-                        switchLanguageForm.setSpinnerTextFrom(response.body().getLang());
-                        loadTranslate();
+            call.enqueue(new Callback<YandexDetectResponse>() {
+                @Override
+                public void onResponse(Call<YandexDetectResponse> call, Response<YandexDetectResponse> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body().getCode() == 200 && response.body().getLang().length() > 0) {
+                            switchLanguageForm.setPrevSpinnerFromPos(switchLanguageForm.getSpinnerFromPos());
+                            switchLanguageForm.setSpinnerTextFrom(response.body().getLang());
+                            loadTranslate();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<YandexDetectResponse> call, Throwable t) {
-                hideKeyboard();
-                Snackbar.make(relativeLayout, "Отсутствует подключение к интернету", Snackbar.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<YandexDetectResponse> call, Throwable t) {
+                    hideKeyboard();
+                    Snackbar.make(relativeLayout, "Отсутствует подключение к интернету", Snackbar.LENGTH_LONG).show();
+                }
+            });
+        }
+        else{
+            hideKeyboard();
+            Snackbar.make(relativeLayout, "Отсутствует подключение к интернету", Snackbar.LENGTH_LONG).show();
+        }
     }
 
     // Сохранение перевода в историю
@@ -309,5 +321,12 @@ public class TranslateFragment extends Fragment {
     private void hideKeyboard(){
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(relativeLayout.getWindowToken(), 0);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

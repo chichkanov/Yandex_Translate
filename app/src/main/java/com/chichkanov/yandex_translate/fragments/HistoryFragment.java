@@ -1,6 +1,5 @@
 package com.chichkanov.yandex_translate.fragments;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -33,6 +32,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/*Для хранения данных решил использовать sharedPreferences
+Знаю, что sqlite db подходит для такие задач лучше, но из-за
+отсутствия опыта все таки остановился на префах*/
 
 public class HistoryFragment extends Fragment implements Toolbar.OnMenuItemClickListener {
 

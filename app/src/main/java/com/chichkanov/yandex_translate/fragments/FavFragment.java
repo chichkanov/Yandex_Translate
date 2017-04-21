@@ -32,6 +32,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/*Для хранения данных решил использовать sharedPreferences
+Знаю, что sqlite db подходит для такие задач лучше, но из-за
+отсутствия опыта все таки остановился на префах*/
+
 public class FavFragment extends Fragment implements Toolbar.OnMenuItemClickListener {
 
     private static final String ARG_TITLE = "Избранное";
