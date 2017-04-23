@@ -78,12 +78,14 @@ public class TranslateFormView extends RelativeLayout{
             // Как только текст изменился иницируем загрузку перевода
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().trim().length() > 0 && s.toString().charAt(s.toString().length()-1) != ' ') {
-                    imageButton.setVisibility(VISIBLE);
-                    // Чтобы не делать запросы слишком часто, делаем небольшую задержку между переводами
-                    if (textChangingListener != null) {
-                        handler.removeCallbacks(instantLoaderTask);
-                        handler.postDelayed(instantLoaderTask, 200);
+                if (s.toString().trim().length() > 0) {
+                    if(s.toString().charAt(s.toString().length()-1) != ' ') {
+                        imageButton.setVisibility(VISIBLE);
+                        // Чтобы не делать запросы слишком часто, делаем небольшую задержку между переводами
+                        if (textChangingListener != null) {
+                            handler.removeCallbacks(instantLoaderTask);
+                            handler.postDelayed(instantLoaderTask, 200);
+                        }
                     }
                 } else {
                     imageButton.setVisibility(INVISIBLE);
