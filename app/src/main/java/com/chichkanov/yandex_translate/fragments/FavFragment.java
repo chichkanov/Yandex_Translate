@@ -45,6 +45,8 @@ public class FavFragment extends Fragment implements Toolbar.OnMenuItemClickList
     private RecyclerView.Adapter adapter;
     List<HistoryItem> dataset = new ArrayList<>();
 
+    private boolean markedAsFavByButton;
+
     public FavFragment() {
     }
 
@@ -62,6 +64,7 @@ public class FavFragment extends Fragment implements Toolbar.OnMenuItemClickList
         if (getArguments() != null) {
             title = getArguments().getString(ARG_TITLE);
         }
+        markedAsFavByButton = false;
     }
 
     @Override
@@ -121,10 +124,19 @@ public class FavFragment extends Fragment implements Toolbar.OnMenuItemClickList
     // Логика добавления в избранное отличается, так как тут нам нужно убрать элемент из избранного
     private void markAsFav(int position, boolean keepInList) {
         HistoryItem item = dataset.get(position);
-        item.setMarkedFav(!item.isMarkedFav());
+
+        if(!markedAsFavByButton && !keepInList){
+            item.setMarkedFav(false);
+        }
+        else {
+            item.setMarkedFav(!item.isMarkedFav());
+        }
 
         if (!keepInList) {
             dataset.remove(position);
+        }
+        else{
+            markedAsFavByButton = item.isMarkedFav();
         }
 
         String name = item.getTextFrom() + item.getTextTo() + item.getLang();
